@@ -21,7 +21,7 @@ cmake_minimum_required(VERSION 2.8...3.12)
 project(ThatRabbitGame)
 
 # Why, yes, we're rollin' C++11
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -D_GNU_SOURCE")
 
 # That Rabbit Game - Source code
 file(GLOB SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
@@ -69,6 +69,8 @@ IF(APPLE)
 ELSE()
     IF(NINTENDO_WII OR NINTENDO_GAMECUBE)
         find_library(OPENGL opengx REQUIRED)
+    ELSEIF(NINTENDO_SWITCH)
+        find_library(OPENGL GLESv2 REQUIRED)
     ELSE()
         find_library(OPENGL GL REQUIRED)
     ENDIF()
@@ -80,6 +82,16 @@ ELSE()
         ogc_create_dol(trg2)
     ENDIF()
 
+    IF(NINTENDO_SWITCH)
+        nx_generate_nacp(trg2.nacp
+            NAME   "trg2"
+            AUTHOR "mardy"
+        )
+
+        nx_create_nro (trg2
+        NACP  trg2.nacp
+        )
+    ENDIF()
 ENDIF()
 
 find_library(M_LIB m)
