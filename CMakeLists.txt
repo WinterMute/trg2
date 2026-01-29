@@ -67,7 +67,7 @@ IF(APPLE)
     add_executable(trg2 MACOSX_BUNDLE ${SOURCES})
     target_link_libraries(trg2 ${FOUNDATION} ${OPENGL})
 ELSE()
-    IF(CMAKE_SYSTEM_NAME MATCHES "NintendoWii|NintendoGameCube")
+    IF(NINTENDO_WII OR NINTENDO_GAMECUBE)
         find_library(OPENGL opengx REQUIRED)
     ELSE()
         find_library(OPENGL GL REQUIRED)
@@ -75,6 +75,11 @@ ELSE()
 
     add_executable(trg2 ${SOURCES})
     target_link_libraries(trg2 ${OPENGL})
+
+    IF(NINTENDO_WII OR NINTENDO_GAMECUBE)
+        ogc_create_dol(trg2)
+    ENDIF()
+
 ENDIF()
 
 find_library(M_LIB m)
